@@ -3,7 +3,8 @@ import { User } from "../../entity/User";
 import { UserSignIn } from "./dtos/user.signin.dtos";
 import { UserSignUp } from "./dtos/user.signup.dtos";
 import md5 from 'crypto-js/md5';
-import { sign } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
+import { meUser } from "./dtos/user.meUser.dtos";
 
 
 export default class UserService {
@@ -72,5 +73,17 @@ export default class UserService {
         })
 
         return {access_token: token}
+   }
+
+   async meUser(user: any) {
+        //let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJNYXR0ZW8iLCJsYXN0TmFtZSI6IlNhdG9yZSIsIndhbGxldCI6MTAwMCwiYWNjb3VudE51bWJlciI6ODc1ODA5LCJhY2NvdW50RGlnaXQiOjEsImlhdCI6MTY0MDA0NTE0OCwiZXhwIjoxNjQxMjU0NzQ4LCJzdWIiOiIyM2MxMzE1OC02MzAyLTQ4YmQtOTk1NS1iMWM0ZmE2NjAzMWYifQ.XNFIoLw3ArB8iQ-dnKtqmiOybxO56QggA1t1jd9zZII'
+        let res = user.authorization
+        let token = (res.split(' '))[1]
+        const decoded = verify(token, 'default')
+
+        if (decoded) {
+            return decoded
+        }
+        return {msg: 'Um erro foi encontrado'}
    }
 }
